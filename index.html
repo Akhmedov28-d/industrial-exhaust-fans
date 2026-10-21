@@ -1,11 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ПромВентСталь | Вытяжки и Запчасти</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <h1>Производственные вытяжки — Каталог</h1>
+<body class="page">
+
+  <!-- Шапка -->
+  <header class="header">
+    <div class="header__container">
+      <div class="header__brand">
+        <span class="header__logo-icon">⚡</span>
+        <div class="header__brand-text">
+          <h1 class="header__title">ПромВентСталь</h1>
+          <p class="header__subtitle">Вытяжное оборудование и комплектующие</p>
+        </div>
+      </div>
+
+      <div class="header__actions">
+        <button id="qrOpenBtn" class="header__btn header__btn--secondary" title="Показать QR-код для телефона">
+          <span>📱 QR-код</span>
+        </button>
+        <button id="adminLoginBtn" class="header__btn header__btn--primary" title="Панель владельца">
+          <span>🔐 Владелец</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Витрина для клиентов -->
+  <main class="main" id="clientView">
+    <div class="main__container">
+      
+      <!-- Вкладки категорий: красивая капсула -->
+      <div class="category-tabs-wrapper">
+        <section class="category-tabs">
+          <button class="tab-btn tab-btn--active" data-cat="hoods">Вытяжки</button>
+          <button class="tab-btn" data-cat="parts">Запчасти</button>
+        </section>
+      </div>
+
+      <!-- Сетка товаров -->
+      <section class="catalog" id="catalogGrid">
+        <!-- Карточки генерируются скриптом -->
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Панель управления владельца -->
+  <section class="admin-panel admin-panel--hidden" id="adminPanel">
+    <div class="admin-panel__container">
+      
+      <div class="admin-panel__header">
+        <div>
+          <h2 class="admin-panel__title">⚙️ Учётная запись владельца</h2>
+          <p class="admin-panel__subtitle">Добавление вытяжек и запчастей с фотографиями</p>
+        </div>
+        <button id="adminLogoutBtn" class="admin-panel__logout-btn">Выйти в режим каталога</button>
+      </div>
+
+      <!-- Форма добавления -->
+      <div class="admin-panel__form-box">
+        <h3 class="admin-panel__form-title">Добавить товар в каталог</h3>
+        
+        <form id="addItemForm" class="admin-form">
+          <div class="admin-form__row">
+            <div class="admin-form__group">
+              <label class="admin-form__label">Раздел каталога *</label>
+              <select id="itemCategory" class="admin-form__select" required>
+                <option value="hoods">Вытяжки</option>
+                <option value="parts">Запчасти</option>
+              </select>
+            </div>
+            
+            <div class="admin-form__group">
+              <label class="admin-form__label">Название позиции *</label>
+              <input type="text" id="itemTitle" class="admin-form__input" placeholder="Например: Вытяжка промышленная ЗВКП-1" required>
+            </div>
+          </div>
+
+          <!-- Загрузка изображения -->
+          <div class="admin-form__group">
+            <label class="admin-form__label">Изображение товара (фото с устройства) *</label>
+            <input type="file" id="itemImageFile" class="admin-form__file" accept="image/*" required>
+            <div class="admin-form__preview-wrap">
+              <img id="imagePreview" class="admin-form__preview admin-form__preview--hidden" alt="Превью">
+            </div>
+          </div>
+
+          <!-- Характеристики вытяжки -->
+          <div id="hoodSpecsBlock" class="admin-form__specs-box">
+            <h4 class="admin-form__specs-title">Характеристики вытяжки</h4>
+            <div class="admin-form__grid-3">
+              <div class="admin-form__group">
+                <label class="admin-form__label">1) Мощность двигателя (кВт) *</label>
+                <input type="number" step="0.05" id="specPower" class="admin-form__input" placeholder="Напр. 0.75">
+              </div>
+
+              <div class="admin-form__group">
+                <label class="admin-form__label">2) Тип сети *</label>
+                <select id="specPhase" class="admin-form__select">
+                  <option value="1 фазная (220В)">1 фазная (220В)</option>
+                  <option value="3 фазная (380В)">3 фазная (380В)</option>
+                </select>
+              </div>
+
+              <div class="admin-form__group">
+                <label class="admin-form__label">3) Объем прокачки (м³/ч) *</label>
+                <input type="number" id="specAirflow" class="admin-form__input" placeholder="Напр. 2500">
+              </div>
+            </div>
+          </div>
+
+          <!-- Для запчастей -->
+          <div id="partSpecsBlock" class="admin-form__specs-box admin-form__specs-box--hidden">
+            <div class="admin-form__group">
+              <label class="admin-form__label">Назначение / Совместимость запчасти</label>
+              <input type="text" id="partDesc" class="admin-form__input" placeholder="Например: Для улитки 0.55 кВт, диаметр 200 мм">
+            </div>
+          </div>
+
+          <!-- Цена -->
+          <div class="admin-form__group">
+            <label class="admin-form__label">Цена (сом) *</label>
+            <input type="number" id="itemPrice" class="admin-form__input" placeholder="Например: 18500" min="10" required>
+          </div>
+
+          <button type="submit" class="admin-form__submit-btn">Опубликовать позицию на сайте</button>
+        </form>
+      </div>
+
+      <!-- Список всех товаров -->
+      <div class="admin-panel__list-box">
+        <h3 class="admin-panel__form-title">Управление товарами (<span id="totalItemsCount">0</span>)</h3>
+        <div class="admin-panel__table-wrapper">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Фото</th>
+                <th>Категория</th>
+                <th>Название</th>
+                <th>Параметры</th>
+                <th>Цена</th>
+                <th>Удалить</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Модальное окно QR-кода -->
+  <div class="modal modal--hidden" id="qrModal">
+    <div class="modal__overlay" id="qrModalOverlay"></div>
+    <div class="modal__dialog">
+      <button class="modal__close-btn" id="qrModalClose">✕</button>
+      <h3 class="modal__title">📱 QR-код для входа</h3>
+      <p class="modal__desc">Наведите камеру смартфона, чтобы открыть каталог:</p>
+      
+      <div class="modal__qr-container">
+        <img id="qrImage" class="modal__qr-img" alt="QR-код сайта">
+      </div>
+
+      <p class="modal__url-text" id="qrSiteUrl"></p>
+    </div>
+  </div>
+
+  <!-- Модальное окно входа владельца -->
+  <div class="modal modal--hidden" id="authModal">
+    <div class="modal__overlay" id="authModalOverlay"></div>
+    <div class="modal__dialog">
+      <button class="modal__close-btn" id="authModalClose">✕</button>
+      <div class="modal__icon">🔐</div>
+      <h3 class="modal__title">Вход для владельца</h3>
+      <p class="modal__desc">Введите пароль для редактирования товаров:</p>
+      
+      <form id="authForm" class="modal__form">
+        <input 
+          type="password" 
+          id="adminPasswordInput" 
+          class="modal__input" 
+          placeholder="Пароль..." 
+          required 
+          autocomplete="current-password"
+        >
+        <p class="modal__error modal__error--hidden" id="authError">Неверный пароль!</p>
+        <button type="submit" class="modal__btn">Войти</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Подвал -->
+  <footer class="footer">
+    <div class="footer__container">
+      <p class="footer__copyright">© 2026 ПромВентСталь. Все права защищены.</p>
+      <p class="footer__phone">Отдел заказов WhatsApp: +996 755 707 077</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
